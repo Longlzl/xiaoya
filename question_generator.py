@@ -1,14 +1,14 @@
 import json
 from io import StringIO
 
-# from main import QuestionGenerator
+from gemini_llm import QuestionGenerator
 from typing import List, Optional
 import xlwings as xw
 from spark_llm import build_prompt
 from spark_llm import generate_content
 import sys
-from gemini_llm import _build_prompt
-from gemini_llm import _generate_content
+# from gemini_llm import _build_prompt
+# from gemini_llm import _generate_content
 
 def generate_and_write_to_excel2(subject: str, question_type: str, difficulty: int, num_questions: int, score: int,
                                  # knowledge: Optional[str], tags: Optional[List[str]], excel_template: str,
@@ -61,8 +61,9 @@ def generate_and_write_to_excel2(subject: str, question_type: str, difficulty: i
 def generate_and_write_to_excel1(subject: str, question_type: str, difficulty: int, num_questions: int, score: int,
                                  knowledge: Optional[str], tags: Optional[List[str]],
                                  output_filename: str) -> List[dict]:
-    prompt = _build_prompt(subject, question_type, difficulty, num_questions, score, knowledge, tags)
-    response_text = _generate_content(prompt)
+    generator = QuestionGenerator()
+    prompt = generator.generate_question(subject, question_type, difficulty, num_questions, score, knowledge, tags)
+    response_text = generator.generate_content(prompt)
 
     # 提取和处理JSON数据
     json_start = response_text.find('[')
